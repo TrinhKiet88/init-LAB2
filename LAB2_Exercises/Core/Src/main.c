@@ -117,6 +117,39 @@ void update7SEG (int index) {
 		index_led = 0;
 	}
 }
+int hour = 17 , minute = 59 , second = 55;
+void updateClockBuffer(){
+	if(hour < 10){
+		led_buffer[0] = 0;
+		led_buffer[1] = hour;
+	}
+	else{
+		led_buffer[0] = hour/10;
+		led_buffer[1] = hour%10;
+	}
+	if(minute < 10){
+		led_buffer[2] = 0;
+		led_buffer[3] = minute;
+	}
+	else{
+		led_buffer[2] = minute/10;
+		led_buffer[3] = minute%10;
+	}
+}
+void digitalClock(){
+	second++;
+	if(second >= 60){
+		minute++;
+		second = 0;
+	}
+	if(minute >= 60){
+		hour++;
+		minute = 0;
+	}
+	if(hour >= 24){
+		hour = 0;
+	}
+}
 /* USER CODE END 0 */
 
 /**
@@ -168,13 +201,20 @@ int main(void)
 		  HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
 	  }
 	  if(isTimerExpired(1) == 1){
-		  //7led
-		  setTimer(1, 500);
-		  update7SEG(index_led);
-	  }
-	  if(isTimerExpired(2) == 1){
-		  setTimer(2, 1000);
-		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+	  		  //DOT
+	  		  setTimer(1, 1000);
+	  		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+	  	  }
+	  	  if(isTimerExpired(2) == 1){
+	  		  //7led
+	  		  setTimer(2, 250);
+	  		  updateClockBuffer();
+	  		  update7SEG(index_led);
+
+	  	  }
+	  	  if(isTimerExpired(3) == 1){
+	  		  setTimer(3, 1000);
+	  		  digitalClock();
 	  }
 
     /* USER CODE END WHILE */

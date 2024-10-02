@@ -81,47 +81,41 @@ void displayDigit(uint8_t digit) {
 	    HAL_GPIO_WritePin(SEG_5_GPIO_Port, SEG_5_Pin, (segDigits[digit] & 0x20) ? 1 : 0);
 	    HAL_GPIO_WritePin(SEG_6_GPIO_Port, SEG_6_Pin, (segDigits[digit] & 0x40) ? 1 : 0);
 }
-void led_7_seg(){
-	switch(status){
-
+const int MAX_LED = 4;
+int index_led = 0;
+int led_buffer[4] = {1, 2, 3, 4};
+void update7SEG (int index) {
+	HAL_GPIO_WritePin(GPIOA, EN0_Pin|EN1_Pin
+	                          |EN2_Pin|EN3_Pin, 1);
+	switch (index) {
 		case 0:
-			HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, 0);
-			HAL_GPIO_WritePin(GPIOA, EN1_Pin
-			                          |EN2_Pin|EN3_Pin, 1);
-			displayDigit(1);
-
-			status++;
+			//Display the first 7SEG with led_buffer [0]
+			HAL_GPIO_WritePin(GPIOA, EN0_Pin, 0);
+			displayDigit(led_buffer[0]);
 			break;
 		case 1:
-			HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, 0);
-			HAL_GPIO_WritePin(GPIOA, EN0_Pin
-			                          |EN2_Pin|EN3_Pin, 1);
-			displayDigit(2);
-
-			status++;
+			//Display the second 7SEG with led_buffer [1]
+			HAL_GPIO_WritePin(GPIOA, EN1_Pin, 0);
+			displayDigit(led_buffer[1]);
 			break;
 		case 2:
-			HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, 0);
-			HAL_GPIO_WritePin(GPIOA, EN0_Pin|EN1_Pin
-			                          |EN3_Pin, 1);
-			displayDigit(3);
-
-			status++;
+			//Display the third 7SEG with led_buffer [2]
+			HAL_GPIO_WritePin(GPIOA, EN2_Pin, 0);
+			displayDigit(led_buffer[2]);
 			break;
 		case 3:
-			HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, 0);
-			HAL_GPIO_WritePin(GPIOA, EN0_Pin
-			                          |EN1_Pin|EN2_Pin, 1);
-			displayDigit(0);
-
-			status = 0;
+			//Display the forth 7SEG with led_buffer [3]
+			HAL_GPIO_WritePin(GPIOA, EN3_Pin, 0);
+			displayDigit(led_buffer[3]);
 			break;
 		default:
-			HAL_GPIO_WritePin(GPIOA, EN0_Pin|EN1_Pin
-			                          |EN2_Pin|EN3_Pin, 1);
-			status = 0;
+
 			break;
-		}
+	}
+	index_led++;
+	if(index_led >= MAX_LED){
+		index_led = 0;
+	}
 }
 /* USER CODE END 0 */
 
@@ -176,7 +170,7 @@ int main(void)
 	  if(isTimerExpired(1) == 1){
 		  //7led
 		  setTimer(1, 500);
-		  led_7_seg();
+		  update7SEG(index_led);
 	  }
 	  if(isTimerExpired(2) == 1){
 		  setTimer(2, 1000);

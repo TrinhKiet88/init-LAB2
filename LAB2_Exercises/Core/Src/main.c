@@ -150,6 +150,80 @@ void digitalClock(){
 		hour = 0;
 	}
 }
+
+const int MAX_LED_MATRIX = 8;
+int index_led_matrix = 0;
+uint8_t matrix_buffer[8] = {
+    0x00, // Column 0
+    0x7E, // Column 1
+    0x04, // Column 2
+    0x08, // Column 3
+    0x08, // Column 4
+    0x04, // Column 5
+    0x7E, // Column 6
+    0x00  // Column 7
+};
+void displayLEDMatrix(uint8_t digit){
+    HAL_GPIO_WritePin(GPIOB, ROW0_Pin, (matrix_buffer[digit] & 0x01) ? 0 : 1);
+    HAL_GPIO_WritePin(GPIOB, ROW1_Pin, (matrix_buffer[digit] & 0x02) ? 0 : 1);
+    HAL_GPIO_WritePin(GPIOB, ROW2_Pin, (matrix_buffer[digit] & 0x04) ? 0 : 1);
+    HAL_GPIO_WritePin(GPIOB, ROW3_Pin, (matrix_buffer[digit] & 0x08) ? 0 : 1);
+    HAL_GPIO_WritePin(GPIOB, ROW4_Pin, (matrix_buffer[digit] & 0x10) ? 0 : 1);
+    HAL_GPIO_WritePin(GPIOB, ROW5_Pin, (matrix_buffer[digit] & 0x20) ? 0 : 1);
+    HAL_GPIO_WritePin(GPIOB, ROW6_Pin, (matrix_buffer[digit] & 0x40) ? 0 : 1);
+    HAL_GPIO_WritePin(GPIOB, ROW7_Pin, (matrix_buffer[digit] & 0x80) ? 0 : 1);
+}
+void updateLEDMatrix (int index) {
+	HAL_GPIO_WritePin(GPIOA, ENM0_Pin|ENM1_Pin|ENM2_Pin|ENM3_Pin
+					|ENM4_Pin|ENM5_Pin|ENM6_Pin|ENM7_Pin, 1);
+	switch (index) {
+				case 0:
+					HAL_GPIO_WritePin(ENM0_GPIO_Port, ENM0_Pin, 0);
+					displayLEDMatrix(index);
+					break;
+				case 1:
+					HAL_GPIO_WritePin(ENM1_GPIO_Port, ENM1_Pin, 0);
+					displayLEDMatrix(index);
+					break;
+				case 2:
+					HAL_GPIO_WritePin(ENM2_GPIO_Port, ENM2_Pin, 0);
+					displayLEDMatrix(index);
+					break;
+				case 3:
+					HAL_GPIO_WritePin(ENM3_GPIO_Port, ENM3_Pin, 0);
+					displayLEDMatrix(index);
+					break;
+				case 4:
+					HAL_GPIO_WritePin(ENM4_GPIO_Port, ENM4_Pin, 0);
+					displayLEDMatrix(index);
+					break;
+				case 5:
+					HAL_GPIO_WritePin(ENM5_GPIO_Port, ENM5_Pin, 0);
+					displayLEDMatrix(index);
+					break;
+				case 6:
+					HAL_GPIO_WritePin(ENM6_GPIO_Port, ENM6_Pin, 0);
+					displayLEDMatrix(index);
+					break;
+				case 7:
+					HAL_GPIO_WritePin(ENM7_GPIO_Port, ENM7_Pin, 0);
+					displayLEDMatrix(index);
+					break;
+				default:
+					break;
+			}
+	index_led_matrix++;
+	if(index_led_matrix >= MAX_LED_MATRIX){
+		index_led_matrix = 0;
+	}
+}
+void updateClockMatrixBuffer(){
+	uint8_t temp = matrix_buffer[0];
+    for (int i = 0; i < MAX_LED_MATRIX - 1; i++) {
+        matrix_buffer[i] = matrix_buffer[i + 1];
+    }
+    matrix_buffer[MAX_LED_MATRIX - 1] = temp;
+}
 /* USER CODE END 0 */
 
 /**
@@ -197,10 +271,11 @@ int main(void)
   while (1)
   {
 	  if(isTimerExpired(0) == 1){
-		  setTimer(0, 1000);
-		  HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
-	  }
-	  if(isTimerExpired(1) == 1){
+	  		  //LED_RED
+	  		  setTimer(0, 1000);
+	  		  HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
+	  	  }
+	  	  if(isTimerExpired(1) == 1){
 	  		  //DOT
 	  		  setTimer(1, 1000);
 	  		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
@@ -210,12 +285,20 @@ int main(void)
 	  		  setTimer(2, 250);
 	  		  updateClockBuffer();
 	  		  update7SEG(index_led);
-
 	  	  }
 	  	  if(isTimerExpired(3) == 1){
+	  		  //7led
 	  		  setTimer(3, 1000);
 	  		  digitalClock();
-	  }
+	  	  }
+	  	  if(isTimerExpired(4) == 1){
+	  		  setTimer(3, 10);
+	  		  updateLEDMatrix(index_led_matrix);
+	  	  	  }
+	  	  if(isTimerExpired(5) == 1){
+	  		  setTimer(4, 500);
+	  		  //updateClockMatrixBuffer();
+	  	  	  }
 
     /* USER CODE END WHILE */
 

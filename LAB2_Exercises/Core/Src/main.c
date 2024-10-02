@@ -271,34 +271,34 @@ int main(void)
   while (1)
   {
 	  if(isTimerExpired(0) == 1){
-	  		  //LED_RED
-	  		  setTimer(0, 1000);
-	  		  HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
-	  	  }
-	  	  if(isTimerExpired(1) == 1){
-	  		  //DOT
-	  		  setTimer(1, 1000);
-	  		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
-	  	  }
-	  	  if(isTimerExpired(2) == 1){
-	  		  //7led
-	  		  setTimer(2, 250);
-	  		  updateClockBuffer();
-	  		  update7SEG(index_led);
-	  	  }
-	  	  if(isTimerExpired(3) == 1){
-	  		  //7led
-	  		  setTimer(3, 1000);
-	  		  digitalClock();
-	  	  }
-	  	  if(isTimerExpired(4) == 1){
-	  		  setTimer(3, 10);
-	  		  updateLEDMatrix(index_led_matrix);
-	  	  	  }
-	  	  if(isTimerExpired(5) == 1){
-	  		  setTimer(4, 500);
-	  		  //updateClockMatrixBuffer();
-	  	  	  }
+	 		  //LED_RED
+	 		  setTimer(0, 1000);
+	 		  HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
+	 	  }
+	 	  if(isTimerExpired(1) == 1){
+	 		  //DOT
+	 		  setTimer(1, 1000);
+	 		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+	 	  }
+	 	  if(isTimerExpired(2) == 1){
+	 		  //7led
+	 		  setTimer(2, 250);
+	 		  updateClockBuffer();
+	 		  update7SEG(index_led);
+	 	  }
+	 	  if(isTimerExpired(3) == 1){
+	 		  //7led
+	 		  setTimer(3, 1000);
+	 		  digitalClock();
+	 	  }
+	 	  if(isTimerExpired(4) == 1){
+	 	  		  setTimer(3, 10);
+	 	  		  updateLEDMatrix(index_led_matrix);
+	 	  	  }
+	 	  if(isTimerExpired(5) == 1){
+	 	  		  setTimer(4, 500);
+	 	  		  updateClockMatrixBuffer();
+	 	  	  }
 
     /* USER CODE END WHILE */
 

@@ -48,8 +48,8 @@ TIM_HandleTypeDef htim2;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-static void MX_TIM2_Init(void);
 static void MX_GPIO_Init(void);
+static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -117,7 +117,7 @@ void update7SEG (int index) {
 		index_led = 0;
 	}
 }
-int hour = 17 , minute = 59 , second = 55;
+int hour = 17 , minute = 59 , second = 50;
 void updateClockBuffer(){
 	if(hour < 10){
 		led_buffer[0] = 0;
@@ -212,9 +212,9 @@ void updateLEDMatrix (int index) {
 				default:
 					break;
 			}
-	index_led_matrix++;
-	if(index_led_matrix >= MAX_LED_MATRIX){
-		index_led_matrix = 0;
+	index++;
+	if(index >= MAX_LED_MATRIX){
+		index = 0;
 	}
 }
 void updateClockMatrixBuffer(){
@@ -253,8 +253,8 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  MX_TIM2_Init();
   MX_GPIO_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT (& htim2 );
   /* USER CODE END 2 */
@@ -412,7 +412,7 @@ static void MX_GPIO_Init(void)
                           |ROW7_Pin|SEG_3_Pin|SEG_4_Pin|SEG_5_Pin
                           |SEG_6_Pin|ROW0_Pin|ROW1_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : ENM0_Pin ENM1_Pin DOT_Pin Led_red_Pin
+  /*Configure GPIO pins : ENM0_Pin ENM1_Pin DOT_Pin LED_RED_Pin
                            EN0_Pin EN1_Pin EN2_Pin EN3_Pin
                            ENM2_Pin ENM3_Pin ENM4_Pin ENM5_Pin
                            ENM6_Pin ENM7_Pin */
@@ -425,10 +425,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Seg0_Pin Seg1_Pin Seg2_Pin ROW2_Pin
+  /*Configure GPIO pins : SEG_0_Pin SEG_1_Pin SEG_2_Pin ROW2_Pin
                            ROW3_Pin ROW4_Pin ROW5_Pin ROW6_Pin
-                           ROW7_Pin Seg3_Pin Seg4_Pin Seg5_Pin
-                           Seg6_Pin ROW0_Pin ROW1_Pin */
+                           ROW7_Pin SEG_3_Pin SEG_4_Pin SEG_5_Pin
+                           SEG_6_Pin ROW0_Pin ROW1_Pin */
   GPIO_InitStruct.Pin = SEG_0_Pin|SEG_1_Pin|SEG_2_Pin|ROW2_Pin
                           |ROW3_Pin|ROW4_Pin|ROW5_Pin|ROW6_Pin
                           |ROW7_Pin|SEG_3_Pin|SEG_4_Pin|SEG_5_Pin
